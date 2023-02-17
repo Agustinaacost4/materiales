@@ -9,6 +9,8 @@ const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 const controller = {
 	// Root - Show all products
 	index: (req, res) => {
+		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
+const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		return res.render('products',{
 			products,
 			toThousand
@@ -36,24 +38,25 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 	
 	// Create -  Method to store
 	store: (req, res) => {
-		
+		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
+      const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		// Do the magic
-	
+
 		const {name, price,description,category,image,discount}= req.body;
 		const newProduct ={
-	 
-		id : products[products.length -1].id +1,
-		name: name.trim(),
+	    id : products[products.length -1].id +1,
+		name:name.trim(),
 		description : description.trim(),
 		price : +price,
 		discount:+discount,
-		image:null,
+		image:  req.file ? req.file.filename : 'default-image.png',
 		category
 		
 		};
+		
 		products.push(newProduct),
 		fs.writeFileSync(productsFilePath, JSON.stringify(products, null,3), 'utf-8')
-		return res.redirect('/')
+		return res.redirect('/products')
 	},
 
 	// Update - Form to edit
@@ -69,23 +72,26 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
+		
+		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
+       const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+	   
 		const {id} = req.params;
 		const product = products.find(product => product.id ===+id);
 		const {name, price,description,category,image,discount}= req.body;
 
 		const productModified ={
-	       id:+id,
+	       id: +id,
 			name: name.trim(),
 			description : description.trim(),
 			price : +price,
 			discount:+discount,
-			image:product.image,
+			image: req.file ? req.file.filename : product.image,
 			category
 		}
 		const productsModified = products.map(product =>{
 			if(product.id === +id){
-				return 
-					productModified
+				return productModified;
 
 				}
 				return product
@@ -93,14 +99,19 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 				
 			
 		})
+		fs.writeFileSync(productsFilePath, JSON.stringify(productsModified, null, 3), "utf-8");
 
-		fs.writeFileSync(productsFilePath, JSON.stringify(products, null,3), 'utf-8');
-		return res.redirect('/products/detail/'+ id)
+		return res.redirect('/products/detail/'+ id);
 	},
 
 	// Delete - Delete one product from DB
 	destroy : (req, res) => {
 		// Do the magic
+		const {id} = req.params;
+		const productsModified = products.filter(product => product.id !== +id)
+		fs.writeFileSync(productsFilePath, JSON.stringify(productsModified, null, 3), "utf-8");
+
+		return res.redirect('/products');
 	}
 };
 

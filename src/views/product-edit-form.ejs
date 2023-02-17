@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <!-- Include Head -->
-<%- include('partials/head', {title: 'Editando: ' + name}) %>
+<%- include('partials/head') %>
 <body>
 	<!-- Header -->
 	<%- include('partials/headerNavbar') %>
@@ -37,11 +37,15 @@
 						</select>
 					</div>
 					<div class="col-12">
+						<label for="image" class="form-label">Imagen</label>
+						<input type="file" class="form-input" id="image" name="image"/>
+					  </div>
+					<div class="col-12">
 						<label for="description" class="form-label">Descipción:</label>
-						<textarea name="description" id="description" class="form-input"><%= productToEdit.description %></textarea>
+						<textarea name="description" id="description" class="form-input"><%=description %></textarea>
 					</div>
 					<div class="col-12">
-						<button type="submit" class="buy-now-button">Guardar producto</button>
+						<button type="submit" class="buy-now-button" onclick="myFunction()">Guardar producto</button>
 					</div>
 				</div>
 			</form>
@@ -49,7 +53,12 @@
 
 	</div>
 	<!-- /todos los productos -->
-
+	
+	<script>
+        function myFunction() {
+			alert("seguro que quieres guardar el producto?");
+          }
+    </script>
 	<!-- footer -->
 	<%- include('partials/footer') %>
 	<!-- /footer -->
