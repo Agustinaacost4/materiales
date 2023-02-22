@@ -10,7 +10,7 @@ const controller = {
 	// Root - Show all products
 	index: (req, res) => {
 		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
-const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+
 		return res.render('products',{
 			products,
 			toThousand
@@ -38,15 +38,16 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 	
 	// Create -  Method to store
 	store: (req, res) => {
-		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
-      const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+	
 		// Do the magic
-
+		const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+		
 		const {name, price,description,category,image,discount}= req.body;
 		const newProduct ={
 	    id : products[products.length -1].id +1,
-		name:name.trim(),
-		description : description.trim(),
+		name:name,
+		description : description,
 		price : +price,
 		discount:+discount,
 		image:  req.file ? req.file.filename : 'default-image.png',
@@ -56,7 +57,7 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		
 		products.push(newProduct),
 		fs.writeFileSync(productsFilePath, JSON.stringify(products, null,3), 'utf-8')
-		return res.redirect('/products')
+		return res.redirect('/')
 	},
 
 	// Update - Form to edit
@@ -82,8 +83,8 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 
 		const productModified ={
 	       id: +id,
-			name: name.trim(),
-			description : description.trim(),
+			name: name,
+			description : description,
 			price : +price,
 			discount:+discount,
 			image: req.file ? req.file.filename : product.image,

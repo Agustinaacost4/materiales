@@ -10,8 +10,8 @@ router.get('/',index);
 
 /*** CREATE ONE PRODUCT ***/ 
 router.get('/create/', create); 
-router.post('/create', store); 
-router.post('/',uploadProductImages.single('image'),store);
+
+router.post('/create/',uploadProductImages.single('image'),store);
 
 router
 /*** GET ONE PRODUCT ***/ 
@@ -19,7 +19,7 @@ router.get('/detail/:id/', detail);
 
 /*** EDIT ONE PRODUCT ***/ 
 router.get('/edit/:id', edit); 
-router.put('/edit/:id', update); 
+
 router.put('/edit/:id',uploadProductImages.single('image'), update);
 
 
